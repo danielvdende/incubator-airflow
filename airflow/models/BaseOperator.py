@@ -24,7 +24,6 @@ from airflow.utils.helpers import validate_key
 from airflow.utils.operator_resources import Resources
 
 
-# DANIEL this may need to be changed
 from airflow.models.DAG import DAG
 from airflow.models.TaskInstance import TaskInstance
 

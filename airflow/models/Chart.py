@@ -2,6 +2,9 @@
 from sqlalchemy import (
     Column, Integer, String, DateTime, Text, Boolean, ForeignKey, PickleType,
     Index, Float, LargeBinary, UniqueConstraint)
+from sqlalchemy_utc import UtcDateTime
+from sqlalchemy.orm import relationship
+from airflow.utils import timezone
 
 class Chart(Base):
     __tablename__ = "chart"

@@ -14,6 +14,8 @@ from airflow.utils.timezone import timezone
 from airflow.utils.state import State
 from airflow.utils.log.logging_mixin import LoggingMixin
 
+from airflow.models.DagStat import DagStat
+from airflow.models.TaskInstance import TaskInstance
 
 class DagRun(Base, LoggingMixin):
     """

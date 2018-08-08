@@ -25,6 +25,12 @@ from airflow.utils.net import get_hostname
 from airflow.utils.state import State
 from airflow.utils.timeout import timeout
 
+from airflow.models.XCom import XCom
+from airflow.models.Pool import Pool
+from airflow.models.DagRun import DagRun
+from airflow.models.Log import Log
+from airflow.models.Variable import Variable
+
 class TaskInstance(Base, LoggingMixin):
     """
     Task instances store the state of a task instance. This table is the

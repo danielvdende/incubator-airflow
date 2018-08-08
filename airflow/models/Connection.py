@@ -4,6 +4,7 @@ from sqlalchemy import (
     Index, Float, LargeBinary, UniqueConstraint)
 
 from sqlalchemy.orm import reconstructor, relationship, synonym
+from sqlalchemy.ext.declarative import declared_attr
 from urllib.parse import urlparse, parse_qsl
 from airflow.exceptions import AirflowException
 from airflow.utils.log.logging_mixin import LoggingMixin

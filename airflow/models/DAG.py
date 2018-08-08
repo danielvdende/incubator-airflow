@@ -5,9 +5,11 @@ import copy
 import functools
 import jinja2
 import os
+import pickle
+import re
 import six
 import sys
-import re
+import traceback
 import warnings
 
 from airflow import configuration, utils
@@ -20,6 +22,14 @@ from airflow.utils.db import provide_session
 from airflow.utils.log.logging_mixin import LoggingMixin
 from airflow.utils.state import State
 from airflow import settings
+
+from airflow.models.BaseOperator import BaseOperator
+from airflow.models.DagBag import DagBag
+from airflow.models.DagModel import DagModel
+from airflow.models.DagPickle import DagPickle
+from airflow.models.DagRun import DagRun
+from airflow.models.DagStat import DagStat
+from airflow.models.TaskInstance import TaskInstance
 
 from sqlalchemy import func, or_
 

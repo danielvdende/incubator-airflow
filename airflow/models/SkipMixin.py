@@ -3,6 +3,8 @@ from airflow.utils.db import provide_session
 from airflow.utils import timezone
 from airflow.utils.state import State
 
+from airflow.models.TaskInstance import TaskInstance
+
 class SkipMixin(LoggingMixin):
     @provide_session
     def skip(self, dag_run, execution_date, tasks, session=None):

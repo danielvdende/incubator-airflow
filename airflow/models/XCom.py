@@ -3,6 +3,7 @@ import pickle
 
 from sqlalchemy import Column, Integer, String, LargeBinary, Index, and_
 from sqlalchemy_utc import UtcDateTime
+from sqlalchemy.orm import reconstructor
 
 from airflow import configuration
 from airflow.utils.db import provide_session

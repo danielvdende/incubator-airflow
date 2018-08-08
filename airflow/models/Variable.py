@@ -6,6 +6,8 @@ from airflow.utils.db import provide_session
 
 from airflow.utils.log.logging_mixin import LoggingMixin
 
+from airflow.models.InvalidFernetToken import InvalidFernetToken
+
 class Variable(Base, LoggingMixin):
     __tablename__ = "variable"
 

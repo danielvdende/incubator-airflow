@@ -24,7 +24,9 @@ from airflow.utils.log.logging_mixin import LoggingMixin
 from airflow.utils.state import State
 from airflow.utils.timeout import timeout
 
-
+from airflow.models.DAG import DAG
+from airflow.models.DagModel import DagModel
+from airflow.models.TaskInstance import TaskInstance
 
 class DagBag(BaseDagBag, LoggingMixin):
     """

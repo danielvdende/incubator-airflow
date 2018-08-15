@@ -10,12 +10,14 @@ from airflow import settings
 from airflow.utils.db import provide_session
 from airflow.exceptions import AirflowException
 from airflow.ti_deps.dep_context import DepContext
-from airflow.utils.timezone import timezone
+from airflow.utils import timezone
 from airflow.utils.state import State
 from airflow.utils.log.logging_mixin import LoggingMixin
 
 from airflow.models.DagStat import DagStat
 from airflow.models.TaskInstance import TaskInstance
+from airflow.models.utils import Base, ID_LEN, Stats
+
 
 class DagRun(Base, LoggingMixin):
     """
@@ -154,7 +156,7 @@ class DagRun(Base, LoggingMixin):
         tis = session.query(TI).filter(
             TI.dag_id == self.dag_id,
             TI.execution_date == self.execution_date,
-            )
+        )
         if state:
             if isinstance(state, six.string_types):
                 tis = tis.filter(TI.state == state)
@@ -282,7 +284,7 @@ class DagRun(Base, LoggingMixin):
 
             # if all roots finished and at least one failed, the run failed
             if (not unfinished_tasks and
-                any(r.state in (State.FAILED, State.UPSTREAM_FAILED) for r in roots)):
+                    any(r.state in (State.FAILED, State.UPSTREAM_FAILED) for r in roots)):
                 self.log.info('Marking run %s failed', self)
                 self.state = State.FAILED
                 dag.handle_callback(self, success=False, reason='task_failure',
@@ -387,18 +389,18 @@ class DagRun(Base, LoggingMixin):
         """Returns the latest DagRun for each DAG. """
         subquery = (
             session
-                .query(
+            .query(
                 cls.dag_id,
                 func.max(cls.execution_date).label('execution_date'))
-                .group_by(cls.dag_id)
-                .subquery()
+            .group_by(cls.dag_id)
+            .subquery()
         )
         dagruns = (
             session
-                .query(cls)
-                .join(subquery,
-                      and_(cls.dag_id == subquery.c.dag_id,
-                           cls.execution_date == subquery.c.execution_date))
-                .all()
+            .query(cls)
+            .join(subquery,
+                  and_(cls.dag_id == subquery.c.dag_id,
+                       cls.execution_date == subquery.c.execution_date))
+            .all()
         )
         return dagruns

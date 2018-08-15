@@ -3,8 +3,6 @@ import itertools
 from sqlalchemy import (
     Column, String, Integer, Boolean
 )
-    # Column, Integer, String, DateTime, Text, Boolean, ForeignKey, PickleType,
-    # Index, Float, LargeBinary, UniqueConstraint)
 from sqlalchemy import func
 
 from airflow.utils.db import provide_session
@@ -13,6 +11,7 @@ from airflow.utils.state import State
 
 from airflow.models.DagRun import DagRun
 from airflow.models.utils import Base, ID_LEN
+
 
 class DagStat(Base):
     __tablename__ = "dag_stats"
@@ -84,8 +83,8 @@ class DagStat(Base):
             dagstat_states = set(itertools.product(ids, State.dag_states))
             qry = (
                 session.query(DagRun.dag_id, DagRun.state, func.count('*'))
-                    .filter(DagRun.dag_id.in_(ids))
-                    .group_by(DagRun.dag_id, DagRun.state)
+                .filter(DagRun.dag_id.in_(ids))
+                .group_by(DagRun.dag_id, DagRun.state)
             )
 
             counts = {(dag_id, state): count for dag_id, state, count in qry}

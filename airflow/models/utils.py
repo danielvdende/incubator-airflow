@@ -20,7 +20,6 @@ XCOM_RETURN_KEY = 'return_value'
 Stats = settings.Stats
 
 
-# DANIEL: this variable is only used in the function below. Probably need to be brought together to work
 _fernet = None
 
 

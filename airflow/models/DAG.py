@@ -19,6 +19,7 @@ from airflow.utils import timezone
 from airflow.dag.base_dag import BaseDag
 from airflow.utils.dates import cron_presets, date_range as utils_date_range
 from airflow.utils.db import provide_session
+from airflow.utils.helpers import validate_key
 from airflow.utils.log.logging_mixin import LoggingMixin
 from airflow.utils.state import State
 from airflow import settings
@@ -30,8 +31,10 @@ from airflow.models.DagPickle import DagPickle
 from airflow.models.DagRun import DagRun
 from airflow.models.DagStat import DagStat
 from airflow.models.TaskInstance import TaskInstance
+from airflow.models.utils import clear_task_instances
 
 from sqlalchemy import func, or_
+
 
 @functools.total_ordering
 class DAG(BaseDag, LoggingMixin):
@@ -119,25 +122,25 @@ class DAG(BaseDag, LoggingMixin):
     """
 
     def __init__(
-        self, dag_id,
-        description='',
-        schedule_interval=timedelta(days=1),
-        start_date=None, end_date=None,
-        full_filepath=None,
-        template_searchpath=None,
-        user_defined_macros=None,
-        user_defined_filters=None,
-        default_args=None,
-        concurrency=configuration.conf.getint('core', 'dag_concurrency'),
-        max_active_runs=configuration.conf.getint(
-            'core', 'max_active_runs_per_dag'),
-        dagrun_timeout=None,
-        sla_miss_callback=None,
-        default_view=configuration.conf.get('webserver', 'dag_default_view').lower(),
-        orientation=configuration.conf.get('webserver', 'dag_orientation'),
-        catchup=configuration.conf.getboolean('scheduler', 'catchup_by_default'),
-        on_success_callback=None, on_failure_callback=None,
-        params=None):
+            self, dag_id,
+            description='',
+            schedule_interval=timedelta(days=1),
+            start_date=None, end_date=None,
+            full_filepath=None,
+            template_searchpath=None,
+            user_defined_macros=None,
+            user_defined_filters=None,
+            default_args=None,
+            concurrency=configuration.conf.getint('core', 'dag_concurrency'),
+            max_active_runs=configuration.conf.getint(
+                'core', 'max_active_runs_per_dag'),
+            dagrun_timeout=None,
+            sla_miss_callback=None,
+            default_view=configuration.conf.get('webserver', 'dag_default_view').lower(),
+            orientation=configuration.conf.get('webserver', 'dag_orientation'),
+            catchup=configuration.conf.getboolean('scheduler', 'catchup_by_default'),
+            on_success_callback=None, on_failure_callback=None,
+            params=None):
 
         self.user_defined_macros = user_defined_macros
         self.user_defined_filters = user_defined_filters
@@ -362,7 +365,7 @@ class DAG(BaseDag, LoggingMixin):
         DR = DagRun
         qry = session.query(DR).filter(
             DR.dag_id == self.dag_id,
-            )
+        )
         if not include_externally_triggered:
             qry = qry.filter(DR.external_trigger.__eq__(False))
 
@@ -460,7 +463,7 @@ class DAG(BaseDag, LoggingMixin):
         qry = session.query(func.count(TI.task_id)).filter(
             TI.dag_id == self.dag_id,
             TI.state == State.RUNNING,
-            )
+        )
         return qry.scalar() >= self.concurrency
 
     @property
@@ -544,11 +547,12 @@ class DAG(BaseDag, LoggingMixin):
         :return: The DagRun if found, otherwise None.
         """
         dagrun = (
-            session.query(DagRun)
-                .filter(
+            session
+            .query(DagRun)
+            .filter(
                 DagRun.dag_id == self.dag_id,
                 DagRun.execution_date == execution_date)
-                .first())
+            .first())
 
         return dagrun
 
@@ -575,7 +579,7 @@ class DAG(BaseDag, LoggingMixin):
         for task in self.tasks:
             if (isinstance(task, SubDagOperator) or
                 # TODO remove in Airflow 2.0
-                type(task).__name__ == 'SubDagOperator'):
+                    type(task).__name__ == 'SubDagOperator'):
                 subdag_lst.append(task.subdag)
                 subdag_lst += task.subdag.subdags
         return subdag_lst
@@ -613,7 +617,7 @@ class DAG(BaseDag, LoggingMixin):
             self.get_task(downstream_task_id))
 
     def get_task_instances(
-        self, session, start_date=None, end_date=None, state=None):
+            self, session, start_date=None, end_date=None, state=None):
         TI = TaskInstance
         if not start_date:
             start_date = (timezone.utcnow() - timedelta(30)).date()
@@ -625,7 +629,7 @@ class DAG(BaseDag, LoggingMixin):
             TI.execution_date >= start_date,
             TI.execution_date <= end_date,
             TI.task_id.in_([t.task_id for t in self.tasks]),
-            )
+        )
         if state:
             tis = tis.filter(TI.state == state)
         tis = tis.order_by(TI.execution_date).all()
@@ -936,6 +940,7 @@ class DAG(BaseDag, LoggingMixin):
         """
         Shows an ascii tree representation of the DAG
         """
+
         def get_downstream(task, level=0):
             print((" " * level * 4) + str(task))
             level += 1
@@ -1182,7 +1187,7 @@ class DAG(BaseDag, LoggingMixin):
         if len(active_dag_ids) == 0:
             return
         for dag in session.query(
-            DagModel).filter(~DagModel.dag_id.in_(active_dag_ids)).all():
+                DagModel).filter(~DagModel.dag_id.in_(active_dag_ids)).all():
             dag.is_active = False
             session.merge(dag)
 

@@ -1,11 +1,12 @@
 from sqlalchemy import (
-    Column, Integer, String, Text, Boolean
+    Column, String, Boolean
 )
 from sqlalchemy import true as sqltrue
 
 from airflow.utils.db import provide_session
 
 from airflow.models.utils import Base
+
 
 class KubeResourceVersion(Base):
     __tablename__ = "kube_resource_version"

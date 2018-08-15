@@ -6,6 +6,7 @@ from airflow.utils.state import State
 from airflow.models.TaskInstance import TaskInstance
 from airflow.models.utils import Base
 
+
 class Pool(Base):
     __tablename__ = "slot_pool"
 
@@ -32,10 +33,10 @@ class Pool(Base):
         """
         running = (
             session
-                .query(TaskInstance)
-                .filter(TaskInstance.pool == self.pool)
-                .filter(TaskInstance.state == State.RUNNING)
-                .count()
+            .query(TaskInstance)
+            .filter(TaskInstance.pool == self.pool)
+            .filter(TaskInstance.state == State.RUNNING)
+            .count()
         )
         return running
 
@@ -46,10 +47,10 @@ class Pool(Base):
         """
         return (
             session
-                .query(TaskInstance)
-                .filter(TaskInstance.pool == self.pool)
-                .filter(TaskInstance.state == State.QUEUED)
-                .count()
+            .query(TaskInstance)
+            .filter(TaskInstance.pool == self.pool)
+            .filter(TaskInstance.state == State.QUEUED)
+            .count()
         )
 
     @provide_session

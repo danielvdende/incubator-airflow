@@ -5,6 +5,7 @@ from sqlalchemy_utc import UtcDateTime
 
 from airflow.models.utils import Base
 
+
 class ImportError(Base):
     __tablename__ = "import_error"
     id = Column(Integer, primary_key=True)

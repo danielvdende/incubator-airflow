@@ -29,6 +29,7 @@ from airflow.models.DagModel import DagModel
 from airflow.models.TaskInstance import TaskInstance
 from airflow.models.utils import Stats
 
+
 class DagBag(BaseDagBag, LoggingMixin):
     """
     A dagbag is a collection of dags, parsed out of a folder tree and has high
@@ -58,10 +59,10 @@ class DagBag(BaseDagBag, LoggingMixin):
     CYCLE_DONE = 2
 
     def __init__(
-        self,
-        dag_folder=None,
-        executor=None,
-        include_examples=configuration.conf.getboolean('core', 'LOAD_EXAMPLES')):
+            self,
+            dag_folder=None,
+            executor=None,
+            include_examples=configuration.conf.getboolean('core', 'LOAD_EXAMPLES')):
 
         # do not use default arg in signature, to fix import cycle on plugin load
         if executor is None:
@@ -139,7 +140,7 @@ class DagBag(BaseDagBag, LoggingMixin):
             file_last_changed_on_disk = datetime.fromtimestamp(os.path.getmtime(filepath))
             if only_if_updated \
                 and filepath in self.file_last_changed \
-                and file_last_changed_on_disk == self.file_last_changed[filepath]:
+                    and file_last_changed_on_disk == self.file_last_changed[filepath]:
                 return found_dags
 
         except Exception as e:
@@ -249,14 +250,14 @@ class DagBag(BaseDagBag, LoggingMixin):
 
         tis = (
             session.query(TI)
-                .join(LJ, TI.job_id == LJ.id)
-                .filter(TI.state == State.RUNNING)
-                .filter(
+            .join(LJ, TI.job_id == LJ.id)
+            .filter(TI.state == State.RUNNING)
+            .filter(
                 or_(
                     LJ.state != State.RUNNING,
                     LJ.latest_heartbeat < limit_dttm,
-                    ))
-                .all()
+                ))
+            .all()
         )
 
         for ti in tis:
@@ -313,9 +314,9 @@ class DagBag(BaseDagBag, LoggingMixin):
             raise cycle_exception
 
     def collect_dags(
-        self,
-        dag_folder=None,
-        only_if_updated=True):
+            self,
+            dag_folder=None,
+            only_if_updated=True):
         """
         Given a file path or a folder, this method looks for python modules,
         imports them and adds them to the dagbag collection.
@@ -384,7 +385,7 @@ class DagBag(BaseDagBag, LoggingMixin):
     def deactivate_inactive_dags(self, session=None):
         active_dag_ids = [dag.dag_id for dag in list(self.dags.values())]
         for dag in session.query(
-            DagModel).filter(~DagModel.dag_id.in_(active_dag_ids)).all():
+                DagModel).filter(~DagModel.dag_id.in_(active_dag_ids)).all():
             dag.is_active = False
             session.merge(dag)
         session.commit()

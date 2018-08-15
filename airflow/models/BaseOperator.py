@@ -23,7 +23,8 @@ from airflow.utils.weight_rule import WeightRule
 from airflow.utils.helpers import validate_key
 from airflow.utils.operator_resources import Resources
 
-from airflow.models.utils import _CONTEXT_MANAGER_DAG, clear_task_instances, XCOM_RETURN_KEY
+from airflow.models.utils import _CONTEXT_MANAGER_DAG,\
+    clear_task_instances, XCOM_RETURN_KEY
 from airflow.models.DAG import DAG
 from airflow.models.TaskInstance import TaskInstance
 
@@ -205,43 +206,43 @@ class BaseOperator(LoggingMixin):
 
     @apply_defaults
     def __init__(
-        self,
-        task_id,
-        owner=configuration.conf.get('operators', 'DEFAULT_OWNER'),
-        email=None,
-        email_on_retry=True,
-        email_on_failure=True,
-        retries=0,
-        retry_delay=timedelta(seconds=300),
-        retry_exponential_backoff=False,
-        max_retry_delay=None,
-        start_date=None,
-        end_date=None,
-        schedule_interval=None,  # not hooked as of now
-        depends_on_past=False,
-        wait_for_downstream=False,
-        dag=None,
-        params=None,
-        default_args=None,
-        adhoc=False,
-        priority_weight=1,
-        weight_rule=WeightRule.DOWNSTREAM,
-        queue=configuration.conf.get('celery', 'default_queue'),
-        pool=None,
-        sla=None,
-        execution_timeout=None,
-        on_failure_callback=None,
-        on_success_callback=None,
-        on_retry_callback=None,
-        trigger_rule=TriggerRule.ALL_SUCCESS,
-        resources=None,
-        run_as_user=None,
-        task_concurrency=None,
-        executor_config=None,
-        inlets=None,
-        outlets=None,
-        *args,
-        **kwargs):
+            self,
+            task_id,
+            owner=configuration.conf.get('operators', 'DEFAULT_OWNER'),
+            email=None,
+            email_on_retry=True,
+            email_on_failure=True,
+            retries=0,
+            retry_delay=timedelta(seconds=300),
+            retry_exponential_backoff=False,
+            max_retry_delay=None,
+            start_date=None,
+            end_date=None,
+            schedule_interval=None,  # not hooked as of now
+            depends_on_past=False,
+            wait_for_downstream=False,
+            dag=None,
+            params=None,
+            default_args=None,
+            adhoc=False,
+            priority_weight=1,
+            weight_rule=WeightRule.DOWNSTREAM,
+            queue=configuration.conf.get('celery', 'default_queue'),
+            pool=None,
+            sla=None,
+            execution_timeout=None,
+            on_failure_callback=None,
+            on_success_callback=None,
+            on_retry_callback=None,
+            trigger_rule=TriggerRule.ALL_SUCCESS,
+            resources=None,
+            run_as_user=None,
+            task_concurrency=None,
+            executor_config=None,
+            inlets=None,
+            outlets=None,
+            *args,
+            **kwargs):
 
         if args or kwargs:
             # TODO remove *args and **kwargs in Airflow 2.0
@@ -268,8 +269,8 @@ class BaseOperator(LoggingMixin):
             raise AirflowException(
                 "The trigger_rule must be one of {all_triggers},"
                 "'{d}.{t}'; received '{tr}'."
-                    .format(all_triggers=TriggerRule.all_triggers,
-                            d=dag.dag_id if dag else "", t=task_id, tr=trigger_rule))
+                .format(all_triggers=TriggerRule.all_triggers,
+                        d=dag.dag_id if dag else "", t=task_id, tr=trigger_rule))
 
         self.trigger_rule = trigger_rule
         self.depends_on_past = depends_on_past
@@ -307,8 +308,8 @@ class BaseOperator(LoggingMixin):
             raise AirflowException(
                 "The weight_rule must be one of {all_weight_rules},"
                 "'{d}.{t}'; received '{tr}'."
-                    .format(all_weight_rules=WeightRule.all_weight_rules,
-                            d=dag.dag_id if dag else "", t=task_id, tr=weight_rule))
+                .format(all_weight_rules=WeightRule.all_weight_rules,
+                        d=dag.dag_id if dag else "", t=task_id, tr=weight_rule))
         self.weight_rule = weight_rule
 
         self.resources = Resources(**(resources or {}))
@@ -626,7 +627,7 @@ class BaseOperator(LoggingMixin):
         exts = self.__class__.template_ext
         if (
             isinstance(content, six.string_types) and
-            any([content.endswith(ext) for ext in exts])):
+                any([content.endswith(ext) for ext in exts])):
             return jinja_env.get_template(content).render(**context)
         else:
             return self.render_template_from_field(attr, content, context, jinja_env)
@@ -646,7 +647,7 @@ class BaseOperator(LoggingMixin):
             content = getattr(self, attr)
             if content is not None and \
                 isinstance(content, six.string_types) and \
-                any([content.endswith(ext) for ext in self.template_ext]):
+                    any([content.endswith(ext) for ext in self.template_ext]):
                 env = self.dag.get_template_env()
                 try:
                     setattr(self, attr, env.loader.get_source(env, content)[0])
@@ -723,7 +724,7 @@ class BaseOperator(LoggingMixin):
             TI.task_id == self.task_id,
             TI.execution_date >= start_date,
             TI.execution_date <= end_date,
-            ).order_by(TI.execution_date).all()
+        ).order_by(TI.execution_date).all()
 
     def get_flat_relative_ids(self, upstream=False, found_descendants=None):
         """
@@ -751,12 +752,12 @@ class BaseOperator(LoggingMixin):
                         self.get_flat_relative_ids(upstream)))
 
     def run(
-        self,
-        start_date=None,
-        end_date=None,
-        ignore_first_depends_on_past=False,
-        ignore_ti_state=False,
-        mark_success=False):
+            self,
+            start_date=None,
+            end_date=None,
+            ignore_first_depends_on_past=False,
+            ignore_ti_state=False,
+            mark_success=False):
         """
         Run a set of task instances for a date range.
         """
@@ -870,11 +871,11 @@ class BaseOperator(LoggingMixin):
         self._set_relatives(task_or_task_list, upstream=True)
 
     def xcom_push(
-        self,
-        context,
-        key,
-        value,
-        execution_date=None):
+            self,
+            context,
+            key,
+            value,
+            execution_date=None):
         """
         See TaskInstance.xcom_push()
         """
@@ -884,12 +885,12 @@ class BaseOperator(LoggingMixin):
             execution_date=execution_date)
 
     def xcom_pull(
-        self,
-        context,
-        task_ids=None,
-        dag_id=None,
-        key=XCOM_RETURN_KEY,
-        include_prior_dates=None):
+            self,
+            context,
+            task_ids=None,
+            dag_id=None,
+            key=XCOM_RETURN_KEY,
+            include_prior_dates=None):
         """
         See TaskInstance.xcom_pull()
         """

@@ -1,12 +1,12 @@
 
 from sqlalchemy import (
-    Column, Integer, String, DateTime, Text, Boolean, ForeignKey, PickleType,
-    Index, Float, LargeBinary, UniqueConstraint)
+    Column, Integer, String, Text, Boolean, ForeignKey)
 from sqlalchemy_utc import UtcDateTime
 from sqlalchemy.orm import relationship
 from airflow.utils import timezone
 
 from airflow.models.utils import Base, ID_LEN
+
 
 class Chart(Base):
     __tablename__ = "chart"

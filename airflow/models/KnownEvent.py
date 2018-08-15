@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 
 from airflow.models.utils import Base
 
+
 class KnownEvent(Base):
     __tablename__ = "known_event"
 

@@ -7,6 +7,7 @@ from sqlalchemy_utc import UtcDateTime
 from airflow.utils import timezone
 from airflow.models.utils import Base
 
+
 class DagPickle(Base):
     """
     Dags can originate from different places (user repos, master repo, ...)

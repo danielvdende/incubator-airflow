@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String
 
 from airflow.models.utils import Base, ID_LEN
 
+
 class User(Base):
     __tablename__ = "users"
 

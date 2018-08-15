@@ -16,7 +16,7 @@ from urllib.parse import quote
 
 from airflow import configuration, settings
 from airflow.exceptions import AirflowException, AirflowSkipException, AirflowTaskTimeout
-from airflow.ti_deps.dep_context import DepContext, QUEUE_DEPS
+from airflow.ti_deps.dep_context import DepContext, QUEUE_DEPS, RUN_DEPS
 from airflow.utils import timezone
 from airflow.utils.db import provide_session
 from airflow.utils.email import send_email
@@ -32,7 +32,7 @@ from airflow.models.DagRun import DagRun
 from airflow.models.Log import Log
 from airflow.models.TaskFail import TaskFail
 from airflow.models.Variable import Variable
-from airflow.models.utils import Base, Stats, XCOM_RETURN_KEY
+from airflow.models.utils import Base, ID_LEN, Stats, XCOM_RETURN_KEY
 
 
 class TaskInstance(Base, LoggingMixin):
@@ -143,18 +143,18 @@ class TaskInstance(Base, LoggingMixin):
         return self._try_number + 1
 
     def command(
-        self,
-        mark_success=False,
-        ignore_all_deps=False,
-        ignore_depends_on_past=False,
-        ignore_task_deps=False,
-        ignore_ti_state=False,
-        local=False,
-        pickle_id=None,
-        raw=False,
-        job_id=None,
-        pool=None,
-        cfg_path=None):
+            self,
+            mark_success=False,
+            ignore_all_deps=False,
+            ignore_depends_on_past=False,
+            ignore_task_deps=False,
+            ignore_ti_state=False,
+            local=False,
+            pickle_id=None,
+            raw=False,
+            job_id=None,
+            pool=None,
+            cfg_path=None):
         """
         Returns a command that can be executed anywhere where airflow is
         installed. This command is part of the message sent to executors by
@@ -174,18 +174,18 @@ class TaskInstance(Base, LoggingMixin):
             cfg_path=cfg_path))
 
     def command_as_list(
-        self,
-        mark_success=False,
-        ignore_all_deps=False,
-        ignore_task_deps=False,
-        ignore_depends_on_past=False,
-        ignore_ti_state=False,
-        local=False,
-        pickle_id=None,
-        raw=False,
-        job_id=None,
-        pool=None,
-        cfg_path=None):
+            self,
+            mark_success=False,
+            ignore_all_deps=False,
+            ignore_task_deps=False,
+            ignore_depends_on_past=False,
+            ignore_ti_state=False,
+            local=False,
+            pickle_id=None,
+            raw=False,
+            job_id=None,
+            pool=None,
+            cfg_path=None):
         """
         Returns a command that can be executed anywhere where airflow is
         installed. This command is part of the message sent to executors by
@@ -348,7 +348,7 @@ class TaskInstance(Base, LoggingMixin):
             TI.dag_id == self.dag_id,
             TI.task_id == self.task_id,
             TI.execution_date == self.execution_date,
-            ).all()
+        ).all()
         if ti:
             state = ti[0].state
         else:
@@ -455,7 +455,7 @@ class TaskInstance(Base, LoggingMixin):
             TaskInstance.task_id.in_(task.downstream_task_ids),
             TaskInstance.execution_date == self.execution_date,
             TaskInstance.state == State.SUCCESS,
-            )
+        )
         count = ti[0][0]
         return count == len(task.downstream_task_ids)
 
@@ -491,10 +491,10 @@ class TaskInstance(Base, LoggingMixin):
 
     @provide_session
     def are_dependencies_met(
-        self,
-        dep_context=None,
-        session=None,
-        verbose=False):
+            self,
+            dep_context=None,
+            session=None,
+            verbose=False):
         """
         Returns whether or not all the conditions are met for this task instance to be run
         given the context for the dependencies (e.g. a task instance being force run from
@@ -513,8 +513,8 @@ class TaskInstance(Base, LoggingMixin):
         failed = False
         verbose_aware_logger = self.log.info if verbose else self.log.debug
         for dep_status in self.get_failed_dep_statuses(
-            dep_context=dep_context,
-            session=session):
+                dep_context=dep_context,
+                session=session):
             failed = True
 
             verbose_aware_logger(
@@ -530,15 +530,15 @@ class TaskInstance(Base, LoggingMixin):
 
     @provide_session
     def get_failed_dep_statuses(
-        self,
-        dep_context=None,
-        session=None):
+            self,
+            dep_context=None,
+            session=None):
         dep_context = dep_context or DepContext()
         for dep in dep_context.deps | self.task.deps:
             for dep_status in dep.get_dep_statuses(
-                self,
-                session,
-                dep_context):
+                    self,
+                    session,
+                    dep_context):
 
                 self.log.debug(
                     "%s dependency '%s' PASSED: %s, %s",
@@ -603,9 +603,9 @@ class TaskInstance(Base, LoggingMixin):
 
         pool = (
             session
-                .query(Pool)
-                .filter(Pool.pool == self.task.pool)
-                .first()
+            .query(Pool)
+            .filter(Pool.pool == self.task.pool)
+            .first()
         )
         if not pool:
             return False
@@ -630,17 +630,17 @@ class TaskInstance(Base, LoggingMixin):
 
     @provide_session
     def _check_and_change_state_before_execution(
-        self,
-        verbose=True,
-        ignore_all_deps=False,
-        ignore_depends_on_past=False,
-        ignore_task_deps=False,
-        ignore_ti_state=False,
-        mark_success=False,
-        test_mode=False,
-        job_id=None,
-        pool=None,
-        session=None):
+            self,
+            verbose=True,
+            ignore_all_deps=False,
+            ignore_depends_on_past=False,
+            ignore_task_deps=False,
+            ignore_ti_state=False,
+            mark_success=False,
+            test_mode=False,
+            job_id=None,
+            pool=None,
+            session=None):
         """
         Checks dependencies and then sets state to RUNNING if they are met. Returns
         True if and only if state is set to RUNNING, which implies that task should be
@@ -683,9 +683,9 @@ class TaskInstance(Base, LoggingMixin):
             ignore_depends_on_past=ignore_depends_on_past,
             ignore_task_deps=ignore_task_deps)
         if not self.are_dependencies_met(
-            dep_context=queue_dep_context,
-            session=session,
-            verbose=True):
+                dep_context=queue_dep_context,
+                session=session,
+                verbose=True):
             session.commit()
             return False
 
@@ -764,12 +764,12 @@ class TaskInstance(Base, LoggingMixin):
 
     @provide_session
     def _run_raw_task(
-        self,
-        mark_success=False,
-        test_mode=False,
-        job_id=None,
-        pool=None,
-        session=None):
+            self,
+            mark_success=False,
+            test_mode=False,
+            job_id=None,
+            pool=None,
+            session=None):
         """
         Immediately runs the task (without checking or changing db state
         before execution) and then sets the appropriate final state after
@@ -817,7 +817,7 @@ class TaskInstance(Base, LoggingMixin):
                 if task_copy.execution_timeout:
                     try:
                         with timeout(int(
-                            task_copy.execution_timeout.total_seconds())):
+                                task_copy.execution_timeout.total_seconds())):
                             result = task_copy.execute(context=context)
                     except AirflowTaskTimeout:
                         task_copy.on_kill()
@@ -886,17 +886,17 @@ class TaskInstance(Base, LoggingMixin):
 
     @provide_session
     def run(
-        self,
-        verbose=True,
-        ignore_all_deps=False,
-        ignore_depends_on_past=False,
-        ignore_task_deps=False,
-        ignore_ti_state=False,
-        mark_success=False,
-        test_mode=False,
-        job_id=None,
-        pool=None,
-        session=None):
+            self,
+            verbose=True,
+            ignore_all_deps=False,
+            ignore_depends_on_past=False,
+            ignore_task_deps=False,
+            ignore_ti_state=False,
+            mark_success=False,
+            test_mode=False,
+            job_id=None,
+            pool=None,
+            session=None):
         res = self._check_and_change_state_before_execution(
             verbose=verbose,
             ignore_all_deps=ignore_all_deps,
@@ -1019,10 +1019,10 @@ class TaskInstance(Base, LoggingMixin):
                 params.update(task.dag.params)
             dag_run = (
                 session.query(DagRun)
-                    .filter_by(
+                .filter_by(
                     dag_id=task.dag.dag_id,
                     execution_date=self.execution_date)
-                    .first()
+                .first()
             )
             run_id = dag_run.run_id if dag_run else None
             session.expunge_all()
@@ -1144,10 +1144,10 @@ class TaskInstance(Base, LoggingMixin):
             self.duration = None
 
     def xcom_push(
-        self,
-        key,
-        value,
-        execution_date=None):
+            self,
+            key,
+            value,
+            execution_date=None):
         """
         Make an XCom available for tasks to pull.
 
@@ -1176,11 +1176,11 @@ class TaskInstance(Base, LoggingMixin):
             execution_date=execution_date or self.execution_date)
 
     def xcom_pull(
-        self,
-        task_ids=None,
-        dag_id=None,
-        key=XCOM_RETURN_KEY,
-        include_prior_dates=False):
+            self,
+            task_ids=None,
+            dag_id=None,
+            key=XCOM_RETURN_KEY,
+            include_prior_dates=False):
         """
         Pull XComs that optionally meet certain criteria.
 

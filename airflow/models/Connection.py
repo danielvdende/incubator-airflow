@@ -1,15 +1,15 @@
 import json
 from sqlalchemy import (
-    Column, Integer, String, DateTime, Text, Boolean, ForeignKey, PickleType,
-    Index, Float, LargeBinary, UniqueConstraint)
+    Column, Integer, String, Boolean)
 
-from sqlalchemy.orm import reconstructor, relationship, synonym
+from sqlalchemy.orm import synonym
 from sqlalchemy.ext.declarative import declared_attr
 from urllib.parse import urlparse, parse_qsl
 from airflow.exceptions import AirflowException
 from airflow.utils.log.logging_mixin import LoggingMixin
 
 from airflow.models.utils import Base, ID_LEN, get_fernet
+
 
 class Connection(Base, LoggingMixin):
     """
@@ -69,10 +69,10 @@ class Connection(Base, LoggingMixin):
     ]
 
     def __init__(
-        self, conn_id=None, conn_type=None,
-        host=None, login=None, password=None,
-        schema=None, port=None, extra=None,
-        uri=None):
+            self, conn_id=None, conn_type=None,
+            host=None, login=None, password=None,
+            schema=None, port=None, extra=None,
+            uri=None):
         self.conn_id = conn_id
         if uri:
             self.parse_from_uri(uri)

@@ -1,6 +1,5 @@
 from sqlalchemy import (
-    Column, Integer, String, DateTime, Text, Boolean, ForeignKey, PickleType,
-    Index, Float, LargeBinary, UniqueConstraint)
+    Column, Integer, String, Boolean)
 from sqlalchemy_utc import UtcDateTime
 
 from airflow import configuration

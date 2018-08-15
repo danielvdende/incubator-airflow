@@ -13,6 +13,7 @@ from airflow.utils.log.logging_mixin import LoggingMixin
 
 from airflow.models.utils import Base, ID_LEN
 
+
 class XCom(Base, LoggingMixin):
     """
     Base class for XCom objects.
@@ -61,13 +62,13 @@ class XCom(Base, LoggingMixin):
     @classmethod
     @provide_session
     def set(
-        cls,
-        key,
-        value,
-        execution_date,
-        task_id,
-        dag_id,
-        session=None):
+            cls,
+            key,
+            value,
+            execution_date,
+            task_id,
+            dag_id,
+            session=None):
         """
         Store an XCom value.
         TODO: "pickling" has been deprecated and JSON is preferred.
@@ -138,7 +139,7 @@ class XCom(Base, LoggingMixin):
 
         query = (
             session.query(cls.value).filter(and_(*filters))
-                .order_by(cls.execution_date.desc(), cls.timestamp.desc()))
+                   .order_by(cls.execution_date.desc(), cls.timestamp.desc()))
 
         result = query.first()
         if result:
@@ -185,8 +186,8 @@ class XCom(Base, LoggingMixin):
 
         query = (
             session.query(cls).filter(and_(*filters))
-                .order_by(cls.execution_date.desc(), cls.timestamp.desc())
-                .limit(limit))
+                   .order_by(cls.execution_date.desc(), cls.timestamp.desc())
+                   .limit(limit))
         results = query.all()
         return results
 

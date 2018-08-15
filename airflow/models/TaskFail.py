@@ -1,6 +1,9 @@
 from sqlalchemy import Column, Integer, String, Index
 from sqlalchemy_utc import UtcDateTime
 
+from airflow.models.utils import Base, ID_LEN
+
+
 class TaskFail(Base):
     """
     TaskFail tracks the failed run durations of each task instance.

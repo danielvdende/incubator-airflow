@@ -27,6 +27,7 @@ from airflow.utils.timeout import timeout
 from airflow.models.DAG import DAG
 from airflow.models.DagModel import DagModel
 from airflow.models.TaskInstance import TaskInstance
+from airflow.models.utils import Stats
 
 class DagBag(BaseDagBag, LoggingMixin):
     """

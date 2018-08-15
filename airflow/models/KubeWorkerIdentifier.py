@@ -6,6 +6,7 @@ from sqlalchemy import true as sqltrue
 import uuid
 
 from airflow.utils.db import provide_session
+from airflow.models.utils import Base
 
 
 class KubeWorkerIdentifier(Base):

@@ -11,6 +11,8 @@ from airflow.utils.helpers import as_tuple
 from airflow.utils.timezone import timezone
 from airflow.utils.log.logging_mixin import LoggingMixin
 
+from airflow.models.utils import Base, ID_LEN
+
 class XCom(Base, LoggingMixin):
     """
     Base class for XCom objects.

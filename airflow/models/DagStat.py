@@ -11,7 +11,8 @@ from airflow.utils.db import provide_session
 from airflow.utils.log.logging_mixin import LoggingMixin
 from airflow.utils.state import State
 
-from airflow.models import DagRun
+from airflow.models.DagRun import DagRun
+from airflow.models.utils import Base, ID_LEN
 
 class DagStat(Base):
     __tablename__ = "dag_stats"

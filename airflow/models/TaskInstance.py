@@ -16,10 +16,11 @@ from urllib.parse import quote
 
 from airflow import configuration, settings
 from airflow.exceptions import AirflowException, AirflowSkipException, AirflowTaskTimeout
-from airflow.ti_deps.dep_context import DepContext
+from airflow.ti_deps.dep_context import DepContext, QUEUE_DEPS
 from airflow.utils import timezone
 from airflow.utils.db import provide_session
 from airflow.utils.email import send_email
+from airflow.utils.helpers import is_container
 from airflow.utils.log.logging_mixin import LoggingMixin
 from airflow.utils.net import get_hostname
 from airflow.utils.state import State
@@ -29,7 +30,10 @@ from airflow.models.XCom import XCom
 from airflow.models.Pool import Pool
 from airflow.models.DagRun import DagRun
 from airflow.models.Log import Log
+from airflow.models.TaskFail import TaskFail
 from airflow.models.Variable import Variable
+from airflow.models.utils import Base, Stats, XCOM_RETURN_KEY
+
 
 class TaskInstance(Base, LoggingMixin):
     """

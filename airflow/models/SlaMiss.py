@@ -1,6 +1,8 @@
 from sqlalchemy import Column, String, Boolean, Text
 from sqlalchemy_utc import UtcDateTime
 
+from airflow.models.utils import Base, ID_LEN
+
 
 class SlaMiss(Base):
     """

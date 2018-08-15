@@ -5,6 +5,8 @@ from sqlalchemy import true as sqltrue
 
 from airflow.utils.db import provide_session
 
+from airflow.models.utils import Base
+
 class KubeResourceVersion(Base):
     __tablename__ = "kube_resource_version"
     one_row_id = Column(Boolean, server_default=sqltrue(), primary_key=True)

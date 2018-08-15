@@ -5,6 +5,7 @@ from sqlalchemy_utc import UtcDateTime
 
 from airflow import configuration
 from airflow.utils.db import provide_session
+from airflow.models.utils import Base, ID_LEN
 
 
 class DagModel(Base):

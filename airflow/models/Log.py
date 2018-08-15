@@ -3,7 +3,9 @@ from sqlalchemy import (
 )
 from sqlalchemy_utc import UtcDateTime
 
+from airflow.models.utils import Base, ID_LEN
 from airflow.utils import timezone
+
 
 class Log(Base):
     """

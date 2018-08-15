@@ -2,6 +2,8 @@ from sqlalchemy import Column, Integer, ForeignKey, String, Text
 from sqlalchemy_utc import UtcDateTime
 from sqlalchemy.orm import relationship
 
+from airflow.models.utils import Base
+
 class KnownEvent(Base):
     __tablename__ = "known_event"
 

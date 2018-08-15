@@ -5,7 +5,7 @@ from sqlalchemy import (
 from sqlalchemy_utc import UtcDateTime
 
 from airflow.utils import timezone
-
+from airflow.models.utils import Base
 
 class DagPickle(Base):
     """

@@ -23,9 +23,10 @@ from airflow.utils.weight_rule import WeightRule
 from airflow.utils.helpers import validate_key
 from airflow.utils.operator_resources import Resources
 
-
+from airflow.models.utils import _CONTEXT_MANAGER_DAG, clear_task_instances, XCOM_RETURN_KEY
 from airflow.models.DAG import DAG
 from airflow.models.TaskInstance import TaskInstance
+
 
 @functools.total_ordering
 class BaseOperator(LoggingMixin):

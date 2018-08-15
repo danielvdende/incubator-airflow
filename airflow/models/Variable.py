@@ -2,11 +2,13 @@ import json
 
 from sqlalchemy import Boolean, Column, Integer, String, Text
 from sqlalchemy.orm import synonym
+from sqlalchemy.ext.declarative import declared_attr
 from airflow.utils.db import provide_session
 
 from airflow.utils.log.logging_mixin import LoggingMixin
 
 from airflow.models.InvalidFernetToken import InvalidFernetToken
+from airflow.models.utils import Base, get_fernet
 
 class Variable(Base, LoggingMixin):
     __tablename__ = "variable"

@@ -3,7 +3,8 @@ from sqlalchemy import Column, Integer, String, Text
 from airflow.utils.db import provide_session
 from airflow.utils.state import State
 
-from airflow.models import TaskInstance
+from airflow.models.TaskInstance import TaskInstance
+from airflow.models.utils import Base
 
 class Pool(Base):
     __tablename__ = "slot_pool"

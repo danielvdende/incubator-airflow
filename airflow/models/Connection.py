@@ -9,6 +9,8 @@ from urllib.parse import urlparse, parse_qsl
 from airflow.exceptions import AirflowException
 from airflow.utils.log.logging_mixin import LoggingMixin
 
+from airflow.models.utils import Base, ID_LEN, get_fernet
+
 class Connection(Base, LoggingMixin):
     """
     Placeholder to store information about different database instances

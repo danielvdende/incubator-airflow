@@ -6,6 +6,8 @@ from sqlalchemy_utc import UtcDateTime
 from sqlalchemy.orm import relationship
 from airflow.utils import timezone
 
+from airflow.models.utils import Base, ID_LEN
+
 class Chart(Base):
     __tablename__ = "chart"
 

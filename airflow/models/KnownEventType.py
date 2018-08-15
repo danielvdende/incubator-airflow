@@ -2,6 +2,8 @@ from sqlalchemy import (
     Column, Integer, String
 )
 
+from airflow.models.utils import Base
+
 
 class KnownEventType(Base):
     __tablename__ = "known_event_type"

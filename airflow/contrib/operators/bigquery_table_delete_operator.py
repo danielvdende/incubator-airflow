@@ -18,7 +18,7 @@
 # under the License.
 
 from airflow.contrib.hooks.bigquery_hook import BigQueryHook
-from airflow.models import BaseOperator
+from airflow.models.BaseOperator import BaseOperator
 from airflow.utils.decorators import apply_defaults
 
 

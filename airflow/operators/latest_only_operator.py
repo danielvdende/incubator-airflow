@@ -17,7 +17,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from airflow.models import BaseOperator, SkipMixin
+from airflow.models.BaseOperator import BaseOperator
+from airflow.models.SkipMixin import SkipMixin
 from airflow.utils import timezone
 
 

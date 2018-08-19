@@ -69,8 +69,9 @@ from airflow.api.common.experimental.mark_tasks import (set_dag_run_state_to_run
                                                         set_dag_run_state_to_success,
                                                         set_dag_run_state_to_failed)
 from airflow.exceptions import AirflowException
-from airflow.models import BaseOperator
-from airflow.models import XCom, DagRun
+from airflow.models.Models import DagRun
+from airflow.models.BaseOperator import BaseOperator
+from airflow.models.XCom import XCom
 from airflow.operators.subdag_operator import SubDagOperator
 from airflow.ti_deps.dep_context import DepContext, QUEUE_DEPS, SCHEDULER_DEPS
 from airflow.utils import timezone

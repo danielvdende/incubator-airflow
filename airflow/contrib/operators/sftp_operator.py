@@ -18,7 +18,7 @@
 # under the License.
 from airflow.contrib.hooks.ssh_hook import SSHHook
 from airflow.exceptions import AirflowException
-from airflow.models import BaseOperator
+from airflow.models.BaseOperator import BaseOperator
 from airflow.utils.decorators import apply_defaults
 
 

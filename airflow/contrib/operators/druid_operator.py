@@ -20,7 +20,7 @@
 import json
 
 from airflow.hooks.druid_hook import DruidHook
-from airflow.models import BaseOperator
+from airflow.models.BaseOperator import BaseOperator
 
 
 class DruidOperator(BaseOperator):

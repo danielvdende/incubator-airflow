@@ -23,7 +23,7 @@ from math import pow
 from time import sleep
 
 from airflow.exceptions import AirflowException
-from airflow.models import BaseOperator
+from airflow.models.BaseOperator import BaseOperator
 from airflow.utils import apply_defaults
 
 from airflow.contrib.hooks.aws_hook import AwsHook

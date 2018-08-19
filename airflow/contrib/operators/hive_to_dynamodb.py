@@ -21,7 +21,7 @@ import json
 
 from airflow.contrib.hooks.aws_dynamodb_hook import AwsDynamoDBHook
 from airflow.hooks.hive_hooks import HiveServer2Hook
-from airflow.models import BaseOperator
+from airflow.models.BaseOperator import BaseOperator
 from airflow.utils.decorators import apply_defaults
 
 

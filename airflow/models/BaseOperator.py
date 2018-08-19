@@ -23,11 +23,58 @@ from airflow.utils.weight_rule import WeightRule
 from airflow.utils.helpers import validate_key
 from airflow.utils.operator_resources import Resources
 
-from airflow.models.utils import _CONTEXT_MANAGER_DAG,\
-    clear_task_instances, XCOM_RETURN_KEY
-from airflow.models.DAG import DAG
-from airflow.models.TaskInstance import TaskInstance
+from airflow.models.utils import _CONTEXT_MANAGER_DAG, XCOM_RETURN_KEY
+from airflow.models.Models import DAG, TaskInstance
 
+
+def clear_task_instances(tis,
+                         session,
+                         activate_dag_runs=True,
+                         dag=None,
+                         ):
+    """
+    Clears a set of task instances, but makes sure the running ones
+    get killed.
+
+    :param tis: a list of task instances
+    :param session: current session
+    :param activate_dag_runs: flag to check for active dag run
+    :param dag: DAG object
+    """
+    job_ids = []
+    for ti in tis:
+        if ti.state == State.RUNNING:
+            if ti.job_id:
+                ti.state = State.SHUTDOWN
+                job_ids.append(ti.job_id)
+        else:
+            task_id = ti.task_id
+            if dag and dag.has_task(task_id):
+                task = dag.get_task(task_id)
+                task_retries = task.retries
+                ti.max_tries = ti.try_number + task_retries - 1
+            else:
+                # Ignore errors when updating max_tries if dag is None or
+                # task not found in dag since database records could be
+                # outdated. We make max_tries the maximum value of its
+                # original max_tries or the current task try number.
+                ti.max_tries = max(ti.max_tries, ti.try_number - 1)
+            ti.state = State.NONE
+            session.merge(ti)
+
+    if job_ids:
+        from airflow.jobs import BaseJob as BJ
+        for job in session.query(BJ).filter(BJ.id.in_(job_ids)).all():
+            job.state = State.SHUTDOWN
+
+    if activate_dag_runs and tis:
+        drs = session.query(DagRun).filter(
+            DagRun.dag_id.in_({ti.dag_id for ti in tis}),
+            DagRun.execution_date.in_({ti.execution_date for ti in tis}),
+        ).all()
+        for dr in drs:
+            dr.state = State.RUNNING
+            dr.start_date = timezone.utcnow()
 
 @functools.total_ordering
 class BaseOperator(LoggingMixin):

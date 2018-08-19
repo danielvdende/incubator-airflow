@@ -32,7 +32,7 @@ from uuid import UUID
 from airflow.contrib.hooks.gcs_hook import GoogleCloudStorageHook
 from airflow.contrib.hooks.cassandra_hook import CassandraHook
 from airflow.exceptions import AirflowException
-from airflow.models import BaseOperator
+from airflow.models.BaseOperator import BaseOperator
 from airflow.utils.decorators import apply_defaults
 
 

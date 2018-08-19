@@ -15,7 +15,7 @@ import json
 
 from airflow.contrib.hooks.mongo_hook import MongoHook
 from airflow.hooks.S3_hook import S3Hook
-from airflow.models import BaseOperator
+from airflow.models.BaseOperator import BaseOperator
 from bson import json_util
 
 

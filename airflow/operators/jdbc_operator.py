@@ -18,7 +18,7 @@
 # under the License.
 
 from airflow.hooks.jdbc_hook import JdbcHook
-from airflow.models import BaseOperator
+from airflow.models.BaseOperator import BaseOperator
 from airflow.utils.decorators import apply_defaults
 
 

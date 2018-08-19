@@ -24,7 +24,7 @@ from tempfile import NamedTemporaryFile
 
 from airflow.hooks.hive_hooks import HiveCliHook
 from airflow.contrib.hooks.vertica_hook import VerticaHook
-from airflow.models import BaseOperator
+from airflow.models.BaseOperator import BaseOperator
 from airflow.utils.decorators import apply_defaults
 
 

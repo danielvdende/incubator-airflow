@@ -21,7 +21,7 @@ import time
 import socket
 import json
 from airflow.exceptions import AirflowException
-from airflow.models import BaseOperator
+from airflow.models.BaseOperator import BaseOperator
 from airflow.utils.decorators import apply_defaults
 from airflow.contrib.hooks.jenkins_hook import JenkinsHook
 import jenkins

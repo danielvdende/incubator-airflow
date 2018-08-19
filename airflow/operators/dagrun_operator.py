@@ -17,7 +17,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from airflow.models import BaseOperator
+from airflow.models.BaseOperator import BaseOperator
 from airflow.utils import timezone
 from airflow.utils.decorators import apply_defaults
 from airflow.api.common.experimental.trigger_dag import trigger_dag

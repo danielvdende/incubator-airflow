@@ -3,7 +3,7 @@ from airflow.utils.db import provide_session
 from airflow.utils import timezone
 from airflow.utils.state import State
 
-from airflow.models.TaskInstance import TaskInstance
+from airflow.models.Models import TaskInstance
 
 
 class SkipMixin(LoggingMixin):

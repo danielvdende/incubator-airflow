@@ -18,7 +18,7 @@
 # under the License.
 
 from airflow.contrib.hooks.segment_hook import SegmentHook
-from airflow.models import BaseOperator
+from airflow.models.BaseOperator import BaseOperator
 from airflow.utils.decorators import apply_defaults
 
 

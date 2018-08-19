@@ -34,7 +34,7 @@ from pygments import highlight, lexers
 from pygments.formatters import HtmlFormatter
 from flask import request, Response, Markup, url_for
 from airflow import configuration
-from airflow.models import BaseOperator
+from airflow.models.BaseOperator import BaseOperator
 from airflow.operators.subdag_operator import SubDagOperator
 from airflow.utils import timezone
 from airflow.utils.json import AirflowJsonEncoder

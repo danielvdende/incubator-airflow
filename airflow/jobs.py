@@ -47,6 +47,7 @@ from time import sleep
 from airflow import configuration as conf
 from airflow import executors, models, settings
 from airflow.exceptions import AirflowException
+from airflow.models.utils import Base, ID_LEN
 from airflow.models import DAG, DagRun
 from airflow.settings import Stats
 from airflow.task.task_runner import get_task_runner
@@ -63,9 +64,6 @@ from airflow.utils.log.logging_mixin import LoggingMixin, set_context, StreamLog
 from airflow.utils.state import State
 from airflow.utils.configuration import tmp_configuration_copy
 from airflow.utils.net import get_hostname
-
-Base = models.Base
-ID_LEN = models.ID_LEN
 
 
 class BaseJob(Base, LoggingMixin):

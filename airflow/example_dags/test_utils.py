@@ -19,7 +19,7 @@
 """Used for unit tests"""
 import airflow
 from airflow.operators.bash_operator import BashOperator
-from airflow.models import DAG
+from airflow.models.Models import DAG
 
 dag = DAG(
     dag_id='test_utils',

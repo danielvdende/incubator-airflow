@@ -22,7 +22,7 @@ import MySQLdb
 
 from airflow.contrib.hooks.vertica_hook import VerticaHook
 from airflow.hooks.mysql_hook import MySqlHook
-from airflow.models import BaseOperator
+from airflow.models.BaseOperator import BaseOperator
 from airflow.utils.decorators import apply_defaults
 
 from contextlib import closing

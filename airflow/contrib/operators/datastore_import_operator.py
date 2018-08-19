@@ -19,7 +19,7 @@
 #
 from airflow.contrib.hooks.datastore_hook import DatastoreHook
 from airflow.exceptions import AirflowException
-from airflow.models import BaseOperator
+from airflow.models.BaseOperator import BaseOperator
 from airflow.utils.decorators import apply_defaults
 
 

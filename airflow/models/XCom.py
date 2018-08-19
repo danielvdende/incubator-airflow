@@ -4,11 +4,12 @@ import pickle
 from sqlalchemy import Column, Integer, String, LargeBinary, Index, and_
 from sqlalchemy_utc import UtcDateTime
 from sqlalchemy.orm import reconstructor
+from sqlalchemy.ext.declarative import declarative_base
 
 from airflow import configuration
 from airflow.utils.db import provide_session
 from airflow.utils.helpers import as_tuple
-from airflow.utils.timezone import timezone
+from airflow.utils import timezone
 from airflow.utils.log.logging_mixin import LoggingMixin
 
 from airflow.models.utils import Base, ID_LEN

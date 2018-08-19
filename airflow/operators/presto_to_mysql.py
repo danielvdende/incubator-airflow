@@ -19,7 +19,7 @@
 
 from airflow.hooks.presto_hook import PrestoHook
 from airflow.hooks.mysql_hook import MySqlHook
-from airflow.models import BaseOperator
+from airflow.models.BaseOperator import BaseOperator
 from airflow.utils.decorators import apply_defaults
 
 

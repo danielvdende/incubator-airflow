@@ -7,8 +7,42 @@ from airflow.utils.db import provide_session
 
 from airflow.utils.log.logging_mixin import LoggingMixin
 
-from airflow.models.InvalidFernetToken import InvalidFernetToken
-from airflow.models.utils import Base, get_fernet, ID_LEN
+
+from airflow.models.utils import Base, ID_LEN
+
+_fernet = None
+def get_fernet():
+    """
+    Deferred load of Fernet key.
+
+    This function could fail either because Cryptography is not installed
+    or because the Fernet key is invalid.
+
+    :return: Fernet object
+    :raises: AirflowException if there's a problem trying to load Fernet
+    """
+    global _fernet
+    if _fernet:
+        return _fernet
+    try:
+        from cryptography.fernet import Fernet, InvalidToken
+        global InvalidFernetToken
+        InvalidFernetToken = InvalidToken
+
+    except BuiltinImportError:
+        LoggingMixin().log.warn("cryptography not found - values will not be stored "
+                                "encrypted.",
+                                exc_info=1)
+        _fernet = NullFernet()
+        return _fernet
+
+    try:
+        _fernet = Fernet(configuration.conf.get('core', 'FERNET_KEY').encode('utf-8'))
+        _fernet.is_encrypted = True
+        return _fernet
+    except (ValueError, TypeError) as ve:
+        raise AirflowException("Could not create Fernet object: {}".format(ve))
+
 
 
 class Variable(Base, LoggingMixin):

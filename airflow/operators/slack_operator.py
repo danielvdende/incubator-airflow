@@ -19,7 +19,7 @@
 
 import json
 
-from airflow.models import BaseOperator
+from airflow.models.BaseOperator import BaseOperator
 from airflow.utils.decorators import apply_defaults
 from airflow.hooks.slack_hook import SlackHook
 from airflow.exceptions import AirflowException
